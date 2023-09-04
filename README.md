@@ -83,17 +83,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![farmhelp E-wallet ][product-screenshot]](https://farmhelp.projectwithgopal.me)
+[](https://farmhelp.projectwithgopal.me)
 [![farmhelp E-wallet ][product-loginscreen]](https://farmhelp.projectwithgopal.me)
 
-Store your debit and credit card detail securely on your device and use it whenever, wherever you want. All the information stored in your device locally, so your confidental information will always yours.
+Find your diease and get insights about it. This project is under devlopment and part of Accenture hack and community service project.
 
-Things are used:
-* This app used appwrite for user auth, which is running in docker
-* docker is running in virtual machine instance which is running in google cloud 
-* This project is made for GFG solving for india hackthon, so AMD n2d processor has been used in that instances.
+Why this project?
 
-Of course, This project is not final yet, There's many things in this project we have to finish.
+* Farmers are not able to identify the disease of their plants.
+* Farmers are not able to get the insights about the disease.
+* Farmers are not able to get the solution of the disease.
+
 
 Use the `BLANK_README.md` to get started.
 
@@ -164,17 +164,29 @@ _For more examples, please refer to the [Documentation](https://github.com/gopal
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
+- [] Building the Authentication System
+- [] designing the UI
+- [] Training the model
+- [x] Deploying the model 
+
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+
+see the trained Model. [Click here](<Plant_Disease_Detection - Image Classification.ipynb>)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- CONTRIBUTING -->
+## The AI Model
+
+We used convolution networks for image classification of the disease classes. We converted the model and optimized it using the tensorflowlite format to be used on the android application in memory and time-efficient manner. The tensorflowlite converts the large heavy deep learning models to a smaller and mobile hardware supportive format. It also quantizes the parametric learning weights to reduce the model file size. For example, we converted our convolution model file of 2mb to 200kbs without compromising on the performance of the model. All the database for this app is stored locally to avoid the requirement of internet connection for its usage. The user just needs to click the image of his plant and the app helps them out with the rest.
+
+## challenges we Ran Into
+
+None Of the flutter dependencies seems to working fine eg. Tflite (depreciated), tflite_flutter, flutter_tflite. We are trying our best to embed the pretrained model with flutter.
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -207,6 +219,12 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Gopal Kumar - [@gopalkumar0](https://www.linkedin.com/in/gopalkumar0/) - gopalkumargupta337@gmail.com
 
 Project Link: [https://github.com/gopalkumr/farmhelp](https://github.com/your_username/repo_name)
+
+## Accenture Team
+
+Gopal Kumar - [@gopalkumar0](https://www.linkedin.com/in/gopalkumar0/) -
+Swetha PR - [@swethaparthiban04](https://www.linkedin.com/in/swethaparthiban04/) -
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
