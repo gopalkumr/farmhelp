@@ -31,13 +31,13 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.jpeg" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">farmhelp E-wallet</h3>
+  <h3 align="center">farmhelp Helping the Farmers</h3>
 
   <p align="center">
-    Store your crediental safely in your device.
+    Scan Your Plant and get Insights.
     <br />
     <a href="https://github.com/gopalkumr/farmhelp"><strong>Explore the docs »</strong></a>
     <br />
@@ -215,6 +215,7 @@ Project Link: [https://github.com/gopalkumr/farmhelp](https://github.com/your_us
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
+<!--
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 * [Choose an Open Source License](https://choosealicense.com)
@@ -225,6 +226,9 @@ Use this space to list resources you find helpful and would like to give credit 
 * [GitHub Pages](https://pages.github.com)
 * [Font Awesome](https://fontawesome.com)
 * [React Icons](https://react-icons.github.io/react-icons/search)
+
+-->
+This project is under devlopment and part of Accenture hack and community service project.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
