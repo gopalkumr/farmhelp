@@ -224,6 +224,7 @@ Project Link: [https://github.com/gopalkumr/farmhelp](https://github.com/your_us
 
 Gopal Kumar - [@gopalkumar0](https://www.linkedin.com/in/gopalkumar0/) -
 Swetha PR - [@swethaparthiban04](https://www.linkedin.com/in/swethaparthiban04/) -
+Sachin Singh [@sachin-singh-57a474206](https://www.linkedin.com/in/sachin-singh-57a474206) -
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
