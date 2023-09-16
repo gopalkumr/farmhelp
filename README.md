@@ -230,6 +230,10 @@ Sachin Singh [@sachin-singh-57a474206](https://www.linkedin.com/in/sachin-singh-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## The High Level design for this app
+
+<img src="images/system_design.png" alt="Logo" width="600" height="400">
+
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments

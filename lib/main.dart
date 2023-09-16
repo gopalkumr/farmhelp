@@ -16,20 +16,26 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppwriteClient.getClient();
   //final Account = Account(client);
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
+
+  //enable this once you solved camera problem
+
+  //final cameras = await availableCameras();
+  //final firstCamera = cameras.first;
 
   runApp(MyApp(
-    firstCamera: firstCamera,
-  ));
+      //---
+      //firstCamera: firstCamera,
+      ));
 }
 
 /// Example app widget.
 class MyApp extends StatelessWidget {
   /// Main app widget.
-  final CameraDescription firstCamera; // Add this field
+  ///
+  /// uncomment these line for getting first camera from main func
+  //final CameraDescription firstCamera; // Add this field
 
-  const MyApp({Key? key, required this.firstCamera}) : super(key: key);
+  //const MyApp({Key? key, required this.firstCamera}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +44,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.green), //const MaterialColor(0xFF6666FF, color)
       debugShowCheckedModeBanner: false,
-      initialRoute: '/Mymodel',
+      initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginScreen(),
         '/forgotPass': (BuildContext context) => const ForgotPassword(),
         '/signupverification': (BuildContext context) =>
             const Signupverification(),
         '/Homepage': (BuildContext context) => Homepage(),
-        '/Mymodel': (BuildContext context) => MyModel(camera: firstCamera),
+        //   '/Mymodel': (BuildContext context) => MyModel(camera: firstCamera),
         // '/CardPage': (BuildContext context) => const CardPage(),  this page and their file should be removed
       },
     );
@@ -294,4 +300,3 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 /// Example forgot password screen
-
