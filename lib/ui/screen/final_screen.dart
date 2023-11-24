@@ -1,156 +1,133 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:camera/camera.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image/image.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+//import the config.dart file here for api access
 
-class MyModel extends StatefulWidget {
-  final CameraDescription camera;
+import 'package:http_parser/http_parser.dart';
 
-  const MyModel({Key? key, required this.camera}) : super(key: key);
-
-  @override
-  _MyModelState createState() => _MyModelState();
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: FinalPage(),
+  ));
 }
 
-class _MyModelState extends State<MyModel> {
-  late CameraController _controller;
-  late Interpreter _interpreter;
-  bool _isProcessing = false;
-
+class FinalPage extends StatefulWidget {
   @override
-  void initState() {
-    super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.medium);
-    _initCamera();
-    _loadModel();
-  }
+  _FinalPageState createState() => _FinalPageState();
+}
 
-  void _initCamera() async {
-    try {
-      await _controller.initialize();
-      if (!mounted) {
-        return;
+class _FinalPageState extends State<FinalPage> {
+  bool isloading = false;
+
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+  String predictionResult = ''; // Added to store the prediction result
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = pickedFile;
+        uploadImage(pickedFile.path);
+        isloading = true; //new bool is added
+      } else {
+        print('No image selected.');
+        isloading = false; //new bool is added
       }
-      setState(() {});
-    } catch (e) {
-      log('Error initializing camera: $e');
-    }
+    });
   }
 
-  Future<void> _loadModel() async {
+  Future uploadImage(String path) async {
+    // make sure your flask api or any other ml api is working
+    //  print('\n\nAPI URL: ${dotenv.env['flask_api']}');
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${dotenv.env['flask_api']!}/predict'));
+
+    request.files.add(await http.MultipartFile.fromPath('file', path,
+        contentType: MediaType('image', 'jpeg')));
+
     try {
-      final interpreterOptions = InterpreterOptions()
-        ..addDelegate(XNNPackDelegate()); // Use XNNPACK for inference (Android)
-
-      _interpreter = await Interpreter.fromAsset(
-        'assets/model.tflite',
-        options: interpreterOptions,
-      );
-
-      log('Model loaded successfully');
-    } catch (e) {
-      log('Error initializing model: $e');
-    }
-  }
-
-  void _disposeModel() {
-    _interpreter.close();
-  }
-
-  void _disposeCamera() {
-    _controller.dispose();
-  }
-
-  Future<void> _capturePhotoAndDetect() async {
-    if (!_isProcessing) {
-      setState(() {
-        _isProcessing = true;
-      });
-
-      try {
-        if (_controller.value.isInitialized) {
-          final XFile file = await _controller.takePicture();
-          final Uint8List imageBytes = await File(file.path).readAsBytes();
-
-          // Preprocess the image
-          var inputImage = decodeImage(imageBytes);
-          inputImage = copyResize(inputImage!, width: 300, height: 300);
-          final normalizedInput = inputImage.getBytes(format: Format.rgba);
-
-          // Prepare the input tensor
-          final Float32List input = Float32List.fromList(
-              normalizedInput.map((e) => e / 255.0).toList());
-
-          // Perform inference
-          final output = List<double>.filled(1 * 16, 0).reshape([1, 16]);
-          _interpreter.run(input, output);
-
-          // Post-process the output
-          final List<double> probabilities = output[0];
-          final int predictedClassIndex = probabilities
-              .indexOf(probabilities.reduce((a, b) => a > b ? a : b));
-
-          // Map the class index to a label (replace with your own labels)
-          final List<String> labels = [
-            'Class 0',
-            'Class 1',
-            // Add labels for all 16 classes here
-          ];
-
-          final String predictedLabel = labels[predictedClassIndex];
-
-          log('Predicted Class: $predictedLabel');
-          // Handle the predicted label as needed
-        }
-      } catch (e) {
-        log('Error during inference: $e');
-      } finally {
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
         setState(() {
-          _isProcessing = false;
+          predictionResult = responseBody; // Update the prediction result
+          isloading = false; //new bool is added
         });
       }
+    } catch (e) {
+      print('Could not upload image: $e');
     }
-  }
-
-  @override
-  void dispose() {
-    _disposeModel();
-    _disposeCamera();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return Container();
-    }
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Disease Detection'),
-        ),
-        body: Stack(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Plant disease detection'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            CameraPreview(_controller),
-            Center(
-              child: Text(
-                _isProcessing ? 'Processing...' : '',
-                style: TextStyle(
-                  color: Colors.yellow,
-                  fontSize: 24.0,
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () => getImage(ImageSource.camera),
+                icon: const Icon(Icons.add_a_photo),
+                label: Text('Camera'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () => getImage(ImageSource.gallery),
+                icon: Icon(Icons.photo_library),
+                label: Text('Gallery'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _isProcessing ? null : () => _capturePhotoAndDetect(),
-          child: Icon(Icons.camera),
-        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (_image == null)
+                  Text('No image selected.')
+                else
+                  Image.file(File(_image!.path)),
+                //  Image.network(_image!.path),  ///use this or other this type of method to show result in web.
+                SizedBox(height: 15),
+                if (predictionResult.isNotEmpty)
+                  Text('Prediction Result: $predictionResult'),
+
+                // Display the prediction result
+              ],
+            ),
+          ),
+          if (isloading)
+            Center(
+                child:
+                    CircularProgressIndicator()), // Show CircularProgressIndicator when isLoading is true
+        ],
       ),
     );
   }

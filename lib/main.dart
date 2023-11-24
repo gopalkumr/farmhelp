@@ -1,29 +1,37 @@
 import 'package:animated_login/animated_login.dart';
 import 'package:async/async.dart';
-import 'package:camera/camera.dart';
-import 'package:farmhelp/ui/screen/final_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:farmhelp/src/Home/enum_shelf.dart';
 import 'package:farmhelp/src/providers/appwrite_client.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:farmhelp/ui/screen/home_page.dart';
+import 'package:farmhelp/ui/screen/final_screen.dart';
 
 import 'dialog_builders.dart';
 import 'login_functions.dart';
 
-/// Main function.
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/.env");
+  //(fileName: ".env");
+
+  // String dsn = dotenv['SENTRY_DSN'] ?? '';
+  //load the .env file
+  String dsn = dotenv.env['SENTRY_DSN'] ?? '';
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dsn;
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(MyApp()),
+  );
   AppwriteClient.getClient();
-  //final Account = Account(client);
-
-  //enable this once you solved camera problem
-
-  //final cameras = await availableCameras();
-  //final firstCamera = cameras.first;
 
   runApp(MyApp(
-      //---
       //firstCamera: firstCamera,
       ));
 }
@@ -51,6 +59,8 @@ class MyApp extends StatelessWidget {
         '/signupverification': (BuildContext context) =>
             const Signupverification(),
         '/Homepage': (BuildContext context) => Homepage(),
+        '/final': (BuildContext context) => FinalPage(),
+        //  '/Weatherpage': (BuildContext context) => WeatherPage(),
         //   '/Mymodel': (BuildContext context) => MyModel(camera: firstCamera),
         // '/CardPage': (BuildContext context) => const CardPage(),  this page and their file should be removed
       },

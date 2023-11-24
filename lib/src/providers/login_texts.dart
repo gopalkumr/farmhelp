@@ -74,7 +74,7 @@ class LoginTexts extends ChangeNotifier {
   /// Default value is given in [_defaultWelcomeDescription].
   /// Custom value in the constructor is assigned to [_welcomeDescription].
   String get welcomeDescription =>
-      _welcomeDescription ?? _defaultWelcomeDescription;
+      _welcomeDescription ?? "Heal your plant with us";
 
   /// Action button text for sign up mode.
   /// Default value is given in [_defaultSignUp].
@@ -100,7 +100,7 @@ class LoginTexts extends ChangeNotifier {
   /// Default value is given in [_defaultWelcomeBackDescription].
   /// Custom value in the constructor is assigned to [_welcomeBackDescription].
   String get welcomeBackDescription =>
-      _welcomeBackDescription ?? _defaultWelcomeBackDescription;
+      _welcomeBackDescription ?? "Let's heal Your plant. Join the community";
 
   /// Action button text for login mode.
   /// Default value is given in [_defaultLogin].
@@ -218,16 +218,17 @@ class LoginTexts extends ChangeNotifier {
   String get checkboxError => _checkboxError ?? _defaultCheckboxError;
 
   static const String _defaultWelcome = 'Welcome User!';
+  /* changed here
   static const String _defaultWelcomeDescription =
-      'Lets detect the dieses in your plant ';
+      'Lets detect the dieses in your plant '; */
   static const String _defaultSignUp = 'Sign Up';
   static const String _defaultSignUpFormTitle = 'Create an Account';
   static const String _defaultSignUpUseEmail =
       'or use your email for registration:';
   static const String _defaultnotHaveAnAccount = "Not have an account?";
   static const String _defaultWelcomeBack = 'Welcome back!';
-  static const String _defaultWelcomeBackDescription = "Let's heal Your plant."
-      "Welcome back to the best. Lets Heal your plant";
+ /* static const String _defaultWelcomeBackDescription = "Let's heal Your plant."
+      "Welcome back to the best. Lets Heal your plant";   */
   static const String _defaultLogin = 'Login';
   static const String _defaultLoginFormTitle = 'Login to Account';
   static const String _defaultLoginUseEmail = 'or use your email account:';

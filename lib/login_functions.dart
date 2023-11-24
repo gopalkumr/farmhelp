@@ -27,7 +27,8 @@ class LoginFunctions {
         password: loginData.password,
       );
 
-      Navigator.of(context).pushNamed('/Homepage');
+      //Navigator.of(context).pushNamed('/Homepage');
+      Navigator.of(context).pushNamed('/final');
       return result.$id;
     } on AppwriteException catch (e) {
       DialogBuilder(context).showResultDialog(

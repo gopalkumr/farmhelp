@@ -84,7 +84,11 @@
 ## About The Project
 
 [](https://farmhelp.projectwithgopal.me)
-[![farmhelp E-wallet ][product-loginscreen]](https://farmhelp.projectwithgopal.me)
+[![farmhelp ][product-loginscreen]](https://farmhelp.projectwithgopal.me)
+
+[![farmhelp ][product-homepage]](https://farmhelp.projectwithgopal.me)
+
+[![farmhelp ][product-result_page]](https://farmhelp.projectwithgopal.me)
 
 Find your diease and get insights about it. This project is under devlopment and part of Accenture hack and community service project.
 
@@ -121,10 +125,14 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* Frameworks
-  ```sh
-  flutter 
-  ```
+
+create .env file in assets/ folder and add the following api keys
+```
+flask_api= 'your_flask_api'
+SENTRY_DSN = 'your_sentry_dsn'
+OPEN_WEATHER_API_KEY = 'your_api_key'
+APPWRITE_PROJECT_ID = 'your_project_id'
+```
 
 ### Installation
 
@@ -138,10 +146,6 @@ _Below is an example of how you can instruct your audience on installing and set
 3. Install all dependencies
    ```sh
    flutter pub get
-   ```
-4. Enter your enpoint in `appwrite_clinet.dart`
-   ```
-   const endpoint = 'ENTER YOUR ENDPOINT';
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -269,8 +273,9 @@ This project is under devlopment and part of Accenture hack and community servic
 [license-url]: https://github.com/gopalkumr/farmhelp/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/gopalkumar0
-[product-screenshot]: images/homescreen.png
+[product-homepage]: images/Homepage.png
 [product-loginscreen]: images/loginscreen.png
+[product-result_page]: images/ResultHomepage.png
 [Flutter]: https://img.shields.io/badge/Flutter-000000?style=for-the-badge&logo=Flutter&logoColor=white
 [Next-url]: https://flutter/
 [gcp]: https://img.shields.io/badge/googlecloud-563D7C?style=for-the-badge&logo=googlecloud&logoColor=white

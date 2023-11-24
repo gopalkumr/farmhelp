@@ -44,10 +44,16 @@ dependencies:
   google_fonts: ^4.0.3
   image_picker: ^0.8.5
   image: ^3.3.0
-  tflite_flutter: ^0.10.1
   path_provider: ^2.0.3
   fluttertoast: ^8.0.8
   camera: ^0.10.5+4
+  http: ^0.13.3
+  geolocator: ^8.0.1
+  flutter_inappwebview: ^5.3.2
+  font_awesome_flutter: ^10.5.0
+  sentry_flutter: ^7.10.1
+  flutter_dotenv: ^5.1.0
+  webview_flutter: ^4.4.2
 
 dev_dependencies:
   flutter_test:
@@ -75,9 +81,8 @@ flutter:
   assets:
    - assets/
    - assets/svg/
-   - assets/model/model.tflite
-   - assets/model/labels.txt
-
+   - assets/images/
+   - assets/.env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

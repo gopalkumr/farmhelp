@@ -1,1 +1,0 @@
-const flask_api = "http://98.70.50.107:5000";
