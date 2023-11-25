@@ -86,9 +86,7 @@
 [](https://farmhelp.projectwithgopal.me)
 [![farmhelp ][product-loginscreen]](https://farmhelp.projectwithgopal.me)
 
-[![farmhelp ][product-homepage]](https://farmhelp.projectwithgopal.me)
-
-[![farmhelp ][product-result_page]](https://farmhelp.projectwithgopal.me)
+project screenshot is yet to be added 
 
 Find your diease and get insights about it. This project is under devlopment and part of Accenture hack and community service project.
 
