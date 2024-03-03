@@ -1,4 +1,5 @@
 import 'package:animated_login/animated_login.dart';
+import 'package:appwrite/models.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:farmhelp/src/Home/enum_shelf.dart';
@@ -7,6 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:farmhelp/ui/screen/home_page.dart';
 import 'package:farmhelp/ui/screen/final_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dialog_builders.dart';
 import 'login_functions.dart';
@@ -36,23 +38,33 @@ void main() async {
       ));
 }
 
-/// Example app widget.
 class MyApp extends StatelessWidget {
   /// Main app widget.
-  ///
-  /// uncomment these line for getting first camera from main func
-  //final CameraDescription firstCamera; // Add this field
-
-  //const MyApp({Key? key, required this.firstCamera}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'farmhelp',
-      theme: ThemeData(
-          primarySwatch: Colors.green), //const MaterialColor(0xFF6666FF, color)
+      theme: ThemeData(primarySwatch: Colors.green, useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      home: FutureBuilder<bool>(
+        future: _getLoginState(),
+        builder: (context, snapshot) {
+          //this is to test if isLogedin is working or not
+          print('HIIIIIIIIIIIIIIIIIIIIIII');
+          print(snapshot.data);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); //Show a loading indicator while waiting
+          } else {
+            //if _getLoginState returns true, show the HomePage
+            if (snapshot.data == true) {
+              return Homepage();
+            } else {
+              //if _getLoginState returns false, show the LoginScreen
+              return const LoginScreen();
+            }
+          }
+        },
+      ),
       routes: {
         '/login': (BuildContext context) => const LoginScreen(),
         '/forgotPass': (BuildContext context) => const ForgotPassword(),
@@ -60,25 +72,14 @@ class MyApp extends StatelessWidget {
             const Signupverification(),
         '/Homepage': (BuildContext context) => Homepage(),
         '/final': (BuildContext context) => FinalPage(),
-        //  '/Weatherpage': (BuildContext context) => WeatherPage(),
-        //   '/Mymodel': (BuildContext context) => MyModel(camera: firstCamera),
-        // '/CardPage': (BuildContext context) => const CardPage(),  this page and their file should be removed
       },
     );
   }
 
-  // static const Map<int, Color> color = {
-  //   50: Color.fromRGBO(4, 131, 184, .1),
-  //   100: Color.fromRGBO(4, 131, 184, .2),
-  //   200: Color.fromRGBO(4, 131, 184, .3),
-  //   300: Color.fromRGBO(4, 131, 184, .4),
-  //   400: Color.fromRGBO(4, 131, 184, .5),
-  //   500: Color.fromRGBO(4, 131, 184, .6),
-  //   600: Color.fromRGBO(4, 131, 184, .7),
-  //   700: Color.fromRGBO(4, 131, 184, .8),
-  //   800: Color.fromRGBO(4, 131, 184, .9),
-  //   900: Color.fromRGBO(4, 131, 184, 1),
-  // };
+  Future<bool> _getLoginState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
 }
 
 /// Example login screen
@@ -121,16 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loginTexts: _loginTexts,
       emailValidator: ValidatorModel(
           validatorCallback: (String? email) => 'What an email! $email'),
-      changeLanguageCallback: (LanguageOption? language) {
-        if (language != null) {
-          DialogBuilder(context).showResultDialog(
-              'Successfully changed the language to: ${language.value}.');
-          if (mounted) setState(() => language = language);
-        }
-      },
-      changeLangDefaultOnPressed: () async => _operation?.cancel(),
-      languageOptions: _languageOptions,
-      selectedLanguage: language,
+      changeLanguageCallback: null,
       initialMode: currentMode,
       onAuthModeChange: (AuthMode newMode) async {
         currentMode = newMode;
@@ -190,7 +182,25 @@ class _LoginScreenState extends State<LoginScreen> {
       } */
     }
     print(res);
+    if (authMode == AuthMode.login) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => FinalPage()),
+      );
+    }
     return res;
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Reset the login state
+
+    // Navigate back to LoginScreen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   Future<String?> _onForgotPassword(String email) async {

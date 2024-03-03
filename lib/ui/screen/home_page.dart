@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:farmhelp/main.dart';
+import 'package:farmhelp/ui/screen/final_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +37,20 @@ class Homepage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plant Disease Detection'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('isLoggedIn', false);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const LoginScreen()),
+                (Route<dynamic> route) => false, //remove all the routes
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -164,7 +181,9 @@ class PhotoUploadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // TODO: Implement logic to take a photo or upload from gallery
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => FinalPage()),
+        );
       },
       style: ElevatedButton.styleFrom(
         primary: Colors.green, // Changed button color to green
@@ -174,9 +193,7 @@ class PhotoUploadButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      child: ElevatedButton(
-          onPressed: () => openWebView(context),
-          child: const Text('Take Photo or Upload from Gallery')),
+      child: const Text('Upload Image'),
     );
   }
 }
