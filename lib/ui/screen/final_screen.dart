@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:farmhelp/main.dart';
 import 'package:farmhelp/ui/screen/home_page.dart';
@@ -11,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image/image.dart' as img;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -46,9 +49,51 @@ class _FinalPageState extends State<FinalPage> {
     });
   }
 
+/*
+
+  Future<Uint8List> resizeImage(String path) async {
+    final originalImage = await File(path).readAsBytes();
+    final resizedImage = await FlutterImageCompress.compressWithList(
+      originalImage,
+      minWidth: 224,
+      minHeight: 224,
+      quality: 88,
+    );
+    return resizedImage;
+  }
+
   Future uploadImage(String path) async {
+    final flaskApi = dotenv.env['flask_api'];
     final uri = Uri.parse(
-        'http://192.168.1.8:5000/predict'); // local testing Change on deployment
+        'http://98.70.50.107:4000/predict'); // local testing Change on deployment
+    //flaskApi!);
+    final request = http.MultipartRequest('POST', uri);
+
+    Uint8List bytes = await resizeImage(path);
+    request.files.add(http.MultipartFile.fromBytes('image', bytes,
+        contentType: MediaType('image', 'jpeg')));
+
+    try {
+      var response = await request.send();
+      print(response);
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        predictionResult = responseBody;
+        isloading = false;
+        setState(() {});
+      }
+    } catch (e) {
+      print('Could not upload image: $e');
+    }
+  }
+
+*/
+
+  Future uploadImage(String path) async {
+    final flask_api = dotenv.env['flask_api'];
+    final uri = Uri.parse(
+        'http://98.70.50.107:4000/predict'); // local testing Change on deployment
+    //flask_api!);
     final request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath(
@@ -99,28 +144,49 @@ class _FinalPageState extends State<FinalPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Stack(
           children: <Widget>[
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => getImage(ImageSource.camera),
-                icon: const Icon(Icons.add_a_photo),
-                label: const Text('Camera'),
+            Positioned(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add your onPressed logic here
+                },
+                child: const Text('Try with Gemini'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                 ),
               ),
+              top: 0,
+              left: 0,
+              right: 0,
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => getImage(ImageSource.gallery),
-                icon: const Icon(Icons.photo_library),
-                label: const Text('Gallery'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 80),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => getImage(ImageSource.camera),
+                      icon: const Icon(Icons.add_a_photo),
+                      label: const Text('Camera'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => getImage(ImageSource.gallery),
+                      icon: const Icon(Icons.photo_library),
+                      label: const Text('Gallery'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -200,7 +266,7 @@ class _FinalPageState extends State<FinalPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Supplement Name:',
+                    'Title:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
