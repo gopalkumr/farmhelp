@@ -186,7 +186,7 @@ class PhotoUploadButton extends StatelessWidget {
         );
       },
       style: ElevatedButton.styleFrom(
-        primary: Colors.green, // Changed button color to green
+        backgroundColor: Colors.green, // Changed button color to green
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         textStyle: const TextStyle(fontSize: 18),
         shape: RoundedRectangleBorder(

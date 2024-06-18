@@ -48,7 +48,9 @@ class _FinalPageState extends State<FinalPage> {
 
   Future uploadImage(String path) async {
     final uri = Uri.parse(
-        'http://192.168.1.8:5000/predict'); // local testing Change on deployment
+        // 'http://192.168.1.8:5000/predict');
+        //// local testing Change on deployment
+        'https://plant-dd-co9k.onrender.com/predict');
     final request = http.MultipartRequest('POST', uri);
     request.files.add(
       await http.MultipartFile.fromPath(
@@ -259,8 +261,8 @@ class _FinalPageState extends State<FinalPage> {
                               },
                               child: const Text('Buy Supplement'),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.blue, // background
-                                onPrimary: Colors.white, // foreground
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.blue, // foreground
                               ),
                             ),
                           ),
