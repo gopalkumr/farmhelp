@@ -1,0 +1,53 @@
+name: Flutter iOS CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.5'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Install CocoaPods
+      run: pod install --project-directory=ios
+
+    - name: Build iOS
+      run: |
+        flutter build ios --release --no-codesign
+        xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
+
+    - name: Export IPA
+      run: xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist ios/Runner/Info.plist -exportPath $PWD/build/Runner.ipa
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release.ipa
+        path: build/Runner.ipa
+
+    - name: Deploy to TestFlight
+      uses: joseluisq/fastlane-action@v2.0.0
+      with:
+        lane: 'beta'
+        workdir: './ios'
+      env:
+        APPLE_ID: ${{ secrets.APPLE_ID }}
+        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
